@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("validator", ROOT / "scripts/validate_scene.py")
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
-BASE = json.loads((ROOT / "examples/lianwai/scene.json").read_text(encoding="utf-8"))
+BASE = json.loads((ROOT / "tests/fixtures/legacy-v1.0.json").read_text(encoding="utf-8"))
 
 class SceneTests(unittest.TestCase):
     def setUp(self): self.scene = copy.deepcopy(BASE)
@@ -119,13 +119,14 @@ class SceneTests(unittest.TestCase):
     def test_manifests_and_skill(self):
         for folder in (".claude-plugin", ".codex-plugin"):
             obj = json.loads((ROOT / folder / "plugin.json").read_text(encoding="utf-8"))
-            self.assertEqual(obj["name"], "dramascene"); self.assertEqual(obj["version"], "1.0.0")
+            self.assertEqual(obj["name"], "dramascene"); self.assertEqual(obj["version"], "1.1.0")
             self.assertTrue((ROOT / obj["skills"]).is_dir())
         text = (ROOT / "skills/drama-scene-optimization/SKILL.md").read_text(encoding="utf-8")
         self.assertTrue(text.startswith("---\nname: drama-scene-optimization\ndescription: "))
     def test_readable_case_contains_all_spoken_lines(self):
         text = (ROOT / "examples/lianwai/scene.md").read_text(encoding="utf-8")
-        for row in BASE["dialogues"] + BASE["voiceovers"] + BASE["poem_captions"]:
+        current = json.loads((ROOT / "examples/lianwai/scene.json").read_text(encoding="utf-8"))
+        for row in current["dialogues"] + current["voiceovers"] + current["poem_captions"]:
             self.assertIn(row["text"], text)
 
 if __name__ == "__main__": unittest.main()

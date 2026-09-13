@@ -23,7 +23,7 @@ def validate(data: Any) -> dict[str, Any]:
         return isinstance(value, list) and all(text(x) for x in value)
     if not isinstance(data, dict):
         return {"ok": False, "errors": ["scene must be an object"], "warnings": [], "manual_review_required": True}
-    require(data.get("schema_version") == "1.0", "unsupported schema_version")
+    require(data.get("schema_version") in ("1.0", "1.1"), "unsupported schema_version")
     for key in ("title", "intent", "space"):
         require(text(data.get(key)), f"{key} must be nonempty text")
     source_kind = data.get("source_kind", "poem")
@@ -105,7 +105,7 @@ def validate(data: Any) -> dict[str, Any]:
         spoken = row.get("text") if isinstance(row.get("text"), str) else ""
         require(not CLASSICAL.search(spoken), f"classical spoken line: {row['id']}")
         require(source_kind != "poem" or not any(len(s) >= 4 and s in spoken for s in originals), f"source verse used as speech: {row['id']}")
-        covered.update(refs(row, "source_ids", unit_map, True))
+        covered.update(refs(row, "source_ids", unit_map, data.get("schema_version") == "1.0"))
     for row in dialogues:
         require(row.get("speaker") in characters, f"unknown speaker: {row['id']}")
     captioned = set()
@@ -165,7 +165,122 @@ def validate(data: Any) -> dict[str, Any]:
     require(any(s.get("kind") in ("people", "space") for s in shots), "missing relational scene coverage")
     if mode == "spatial_coexistence":
         require(len(moments) == 1, "spatial mode requires one current moment")
+    if data.get("schema_version") == "1.1":
+        validate_v11(data, errors, warnings)
     return {"ok": not errors, "errors": errors, "warnings": warnings, "manual_review_required": True}
+
+
+def validate_v11(data: dict[str, Any], errors: list[str], warnings: list[str]) -> None:
+    """Validate declared contracts and explicit text patterns, not artistic quality."""
+    def need(ok: bool, message: str) -> None:
+        if not ok: errors.append(message)
+    def text(v: Any) -> bool: return isinstance(v, str) and bool(v.strip())
+    def items(v: Any) -> list[dict[str, Any]]:
+        return [x for x in v if isinstance(x, dict) and text(x.get('id'))] if isinstance(v, list) else []
+    def ids(v: Any, label: str) -> list[str]:
+        if not isinstance(v, list) or not all(text(x) for x in v):
+            errors.append(f'{label} must be a string array'); return []
+        need(len(v) == len(set(v)), f'duplicate references: {label}')
+        return v
+    units = {x['id']: x for x in items(data.get('source_units'))}
+    dialogue = {x['id']: x for x in items(data.get('dialogues'))}
+    voices = items(data.get('voiceovers'))
+    shots = items(data.get('shots'))
+    def table(key: str, nonempty: bool = True) -> dict[str, dict[str, Any]]:
+        raw = data.get(key)
+        need(isinstance(raw, list), f'{key} must be an array')
+        rows = items(raw)
+        need(isinstance(raw, list) and len(rows) == len(raw), f'{key} rows need object and id')
+        need(not nonempty or bool(rows), f'{key} cannot be empty')
+        need(len(rows) == len({x['id'] for x in rows}), f'duplicate id in {key}')
+        return {x['id']: x for x in rows}
+    context = table('context_facts')
+    for cid, row in context.items():
+        need(text(row.get('text')), f'missing context text: {cid}')
+        need(row.get('origin') in ('source_text', 'adaptation'), f'context origin invalid: {cid}')
+        source_ids = ids(row.get('source_ids'), f'{cid}.source_ids')
+        need(all(x in units for x in source_ids), f'unknown context source: {cid}')
+        if row.get('origin') == 'source_text': need(bool(source_ids), f'source context needs evidence: {cid}')
+    context_used_by_dialogue: set[str] = set()
+    for row in list(dialogue.values()) + voices:
+        context_ids = ids(row.get('context_ids'), f'{row["id"]}.context_ids')
+        need(all(x in context for x in context_ids), f'unknown context reference: {row["id"]}')
+        src = row.get('source_ids', [])
+        need(bool(context_ids) or (isinstance(src, list) and bool(src)), f'speech needs source or context: {row["id"]}')
+        if row['id'] in dialogue: context_used_by_dialogue.update(context_ids)
+    order = ids(data.get('dialogue_order'), 'dialogue_order')
+    need(set(order) == set(dialogue), 'dialogue_order must cover every dialogue exactly once')
+    for i, did in enumerate(order):
+        row = dialogue.get(did, {})
+        need(row.get('reply_to') == (order[i-1] if i else None), f'broken dialogue continuation: {did}')
+        need(text(row.get('speech_action')), f'missing speech_action: {did}')
+    encountered = []
+    for row in shots:
+        for did in ids(row.get('dialogue_ids'), f'{row["id"]}.dialogue_ids'):
+            if did not in encountered: encountered.append(did)
+    need(encountered == order, 'shot dialogue order differs from conversation')
+    setting = data.get('setting')
+    if not isinstance(setting, dict):
+        errors.append('setting must be an object'); setting = {}
+    need(setting.get('mode') in ('outdoor_only', 'user_override'), 'invalid setting mode')
+    if setting.get('mode') == 'user_override':
+        need(text(setting.get('override_reason')), 'setting override needs explicit user reason')
+    locations_raw = setting.get('locations')
+    locations = items(locations_raw)
+    need(isinstance(locations_raw, list) and len(locations_raw) == len(locations) and bool(locations), 'locations need nonempty valid rows')
+    need(len(locations) == len({x['id'] for x in locations}), 'duplicate location id')
+    location_ids = {x['id'] for x in locations}
+    outdoor = setting.get('mode') == 'outdoor_only'
+    indoor = re.compile(r'室内|屋内|房间内|卧室|厅内|门内|窗内|内景|走进屋|走进房|推入屋')
+    if outdoor:
+        need(setting.get('architecture_role') == 'background_prop_only', 'architecture must be background prop only')
+        need(all(x.get('roof') == 'open_sky' for x in locations), 'all locations must have open sky')
+        for row in locations:
+            need(not indoor.search(str(row.get('description', ''))), f'indoor location description: {row["id"]}')
+        need(not indoor.search(str(data.get('space', ''))), 'indoor master space')
+        need(not indoor.search(str(setting.get('description', ''))), 'indoor setting description')
+    for row in shots:
+        need(isinstance(row.get('location_id'), str) and row['location_id'] in location_ids, f'unknown shot location: {row["id"]}')
+        if outdoor:
+            need(row.get('environment') == 'outdoor' and row.get('camera_environment') == 'outdoor', f'all shots and cameras must be outdoor: {row["id"]}')
+            for key in ('action', 'camera', 'framing'):
+                need(not indoor.search(str(row.get(key, ''))), f'indoor shot text: {row["id"]}.{key}')
+    narrator_pattern = re.compile(r'不是[^。！？]*而是|不[^。！？]*还|这说明|由此可见|可以推断|这里的|她問的是|她问的是|他问的是|真正想|她(?:其实|心里)?(?:想要|希望|在意|猜测)|他(?:其实|心里)?(?:想要|希望|在意|猜测)')
+    spoken_dialogue = [x.get('text') for x in dialogue.values()]
+    for row in voices:
+        need(row.get('function') in ('background', 'omitted_fact', 'world_rule'), f'narration must add background: {row["id"]}')
+        value = row.get('text', '')
+        need(isinstance(value, str) and not narrator_pattern.search(value), f'analytical or mind-reading narration: {row["id"]}')
+        need(value not in spoken_dialogue, f'narration repeats dialogue: {row["id"]}')
+        added = ids(row.get('added_context_ids'), f'{row["id"]}.added_context_ids')
+        refs = ids(row.get('context_ids'), f'{row["id"]}.context_ids')
+        need(bool(added) and all(x in context and x in refs for x in added), f'narration needs supported added information: {row["id"]}')
+        need(bool(set(added) - context_used_by_dialogue), f'narration adds no new context: {row["id"]}')
+    adaptation = data.get('adaptation_policy')
+    if not isinstance(adaptation, dict):
+        errors.append('adaptation_policy must be an object'); adaptation = {}
+    need(isinstance(adaptation.get('allow_imagination'), bool), 'allow_imagination must be boolean')
+    need(text(adaptation.get('note')), 'adaptation needs provenance note')
+    effects = table('effects', False)
+    if effects: need(adaptation.get('allow_imagination') is True, 'imagination needs authorization')
+    effect_usage: dict[str, list[dict[str, Any]]] = {}
+    for shot in shots:
+        for eid in ids(shot.get('effect_ids'), f'{shot["id"]}.effect_ids'):
+            need(eid in effects, f'unknown effect: {eid}')
+            effect_usage.setdefault(eid, []).append(shot)
+    for eid, row in effects.items():
+        for key in ('visual', 'sound', 'music', 'return_rule'):
+            need(text(row.get(key)), f'effect needs {key}: {eid}')
+        need(row.get('reality_layer') == 'expressive', f'effect must declare expressive layer: {eid}')
+        if isinstance(data.get('structure'), dict) and data['structure'].get('mode') == 'spatial_coexistence':
+            need(row.get('time_mode') == 'concurrent_expression', f'effect cannot reenact past: {eid}')
+        source_ids = ids(row.get('source_ids'), f'{eid}.source_ids')
+        need(bool(source_ids) and all(x in units for x in source_ids), f'effect needs source coverage: {eid}')
+        trigger = row.get('trigger_dialogue_id')
+        need(isinstance(trigger, str) and trigger in dialogue, f'effect trigger invalid: {eid}')
+        need(eid in effect_usage, f'unused effect: {eid}')
+        need(any(isinstance(x.get('dialogue_ids'), list) and trigger in x['dialogue_ids'] for x in effect_usage.get(eid, [])), f'effect missing trigger shot: {eid}')
+    # Keyword and metadata checks intentionally leave all artistic judgments to review.
 
 
 def main() -> int:

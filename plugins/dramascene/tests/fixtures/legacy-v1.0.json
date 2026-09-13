@@ -1,0 +1,325 @@
+{
+  "schema_version": "1.0",
+  "title": "帘外｜昨夜雨疏风骤",
+  "case_version": "2.0.0",
+  "intent": "同一雨后庭室中，两人自然交谈：花还在，但是否已经少了些？平和关切，不演郁闷。",
+  "structure": {
+    "mode": "spatial_coexistence",
+    "time_anchor": "M1：日间雨后，唯一当前场景",
+    "reenact_past": false
+  },
+  "characters": [
+    "帘内人",
+    "卷帘人"
+  ],
+  "performance": {
+    "pace": "normal",
+    "affect": "calm_concern",
+    "gaze": "partner_or_task"
+  },
+  "semantic_policy": {
+    "residual_wine": "intoxication",
+    "inference": "preserved"
+  },
+  "space": "室内小几与椅子—帘口—近庭同一株海棠。帘内人可正常起身走到帘内侧；边框仍遮住花叶细节。卷帘人可以调整帘高、转向同伴，但不开成无遮拦的全景。",
+  "source_units": [
+    {
+      "id": "P1",
+      "text": "昨夜雨疏风骤",
+      "meaning": "过去一夜雨疏风急；不重演夜景"
+    },
+    {
+      "id": "P2",
+      "text": "浓睡不消残酒",
+      "meaning": "深睡后酒意仍在；不是只指杯中的酒"
+    },
+    {
+      "id": "P3",
+      "text": "试问卷帘人",
+      "meaning": "向卷帘者试探问花，问语为改编补足"
+    },
+    {
+      "id": "P4",
+      "text": "却道海棠依旧",
+      "meaning": "对方判断没变，与问者在意的细节形成差异"
+    },
+    {
+      "id": "P5",
+      "text": "知否，知否？",
+      "meaning": "重复关切而非训斥"
+    },
+    {
+      "id": "P6",
+      "text": "应是绿肥红瘦",
+      "meaning": "推测叶繁花疏，不作亲眼证实"
+    }
+  ],
+  "dialogues": [
+    {
+      "id": "D1",
+      "speaker": "帘内人",
+      "text": "你帮我看看，外头那棵海棠怎么样了？",
+      "source_ids": [
+        "P3"
+      ]
+    },
+    {
+      "id": "D2",
+      "speaker": "卷帘人",
+      "text": "我看着跟原来差不多，花还开着呢。",
+      "source_ids": [
+        "P4"
+      ]
+    },
+    {
+      "id": "D3",
+      "speaker": "帘内人",
+      "text": "昨晚雨下得稀稀落落的，风倒挺急。我睡得那么沉，酒劲儿还是没过去。",
+      "source_ids": [
+        "P1",
+        "P2"
+      ]
+    },
+    {
+      "id": "D4",
+      "speaker": "帘内人",
+      "text": "你仔细看了吗？真跟原来一样？",
+      "source_ids": [
+        "P5"
+      ]
+    },
+    {
+      "id": "D5",
+      "speaker": "帘内人",
+      "text": "我估计，叶子应该更茂盛了，花倒少了些。",
+      "source_ids": [
+        "P6"
+      ]
+    }
+  ],
+  "voiceovers": [
+    {
+      "id": "N1",
+      "text": "她问的是花有没有变化，不只是花还在不在。",
+      "source_ids": [
+        "P3",
+        "P4",
+        "P5"
+      ]
+    },
+    {
+      "id": "N2",
+      "text": "这里的“应该”，还带着猜测。",
+      "source_ids": [
+        "P6"
+      ]
+    }
+  ],
+  "poem_captions": [
+    {
+      "id": "T1",
+      "text": "昨夜雨疏风骤",
+      "source_ids": [
+        "P1"
+      ],
+      "channel": "poem"
+    },
+    {
+      "id": "T2",
+      "text": "浓睡不消残酒",
+      "source_ids": [
+        "P2"
+      ],
+      "channel": "poem"
+    },
+    {
+      "id": "T3",
+      "text": "试问卷帘人",
+      "source_ids": [
+        "P3"
+      ],
+      "channel": "poem"
+    },
+    {
+      "id": "T4",
+      "text": "却道海棠依旧",
+      "source_ids": [
+        "P4"
+      ],
+      "channel": "poem"
+    },
+    {
+      "id": "T5",
+      "text": "知否，知否？",
+      "source_ids": [
+        "P5"
+      ],
+      "channel": "poem"
+    },
+    {
+      "id": "T6",
+      "text": "应是绿肥红瘦",
+      "source_ids": [
+        "P6"
+      ],
+      "channel": "poem"
+    }
+  ],
+  "shots": [
+    {
+      "id": "场-关系",
+      "kind": "people",
+      "moment": "M1",
+      "framing": "竖屏中景双人，前侧机位，可见帘口及同一海棠背景",
+      "camera": "帘内人转向同伴准备开口时，推近至肩颈完整的中近景；她看同伴，不看镜头",
+      "visible_speakers": [
+        "帘内人"
+      ],
+      "action": "帘内人放好杯子，正常转身问同伴；卷帘人正在整理帘子",
+      "dialogue_ids": [
+        "D1"
+      ],
+      "voiceover_ids": [],
+      "source_ids": [
+        "P2",
+        "P3",
+        "P6"
+      ],
+      "caption_ids": [],
+      "duration_hint_s": 7
+    },
+    {
+      "id": "人-答话",
+      "kind": "people",
+      "moment": "M1",
+      "framing": "卷帘人前侧中近景，保留承帘手与肩颈",
+      "camera": "接话即切近机位，随后按她转身的幅度小幅跟随，直拍说话者",
+      "visible_speakers": [
+        "卷帘人"
+      ],
+      "action": "卷帘人正常调整帘卷，转向同伴答话，神情放松",
+      "dialogue_ids": [
+        "D2"
+      ],
+      "voiceover_ids": [],
+      "source_ids": [
+        "P3",
+        "P4"
+      ],
+      "caption_ids": [],
+      "duration_hint_s": 6
+    },
+    {
+      "id": "花-一眼",
+      "kind": "object",
+      "moment": "M1",
+      "framing": "同一株海棠的繁叶、疏花与帘框边缘",
+      "camera": "短切一眼，信息够了立即回人物；不作帘内人核验的主观镜头",
+      "visible_speakers": [],
+      "action": "叶片随当前微风正常摆动，枝上花叶数量没有变化",
+      "dialogue_ids": [],
+      "voiceover_ids": [],
+      "source_ids": [
+        "P4",
+        "P6"
+      ],
+      "caption_ids": [],
+      "duration_hint_s": 2
+    },
+    {
+      "id": "人-余酒",
+      "kind": "people",
+      "moment": "M1",
+      "framing": "帘内人中近景至半身，肩颈和收椅动作可见",
+      "camera": "她开口即拍其正面偏侧；自然起身时后退跟随，再稳定回中近景",
+      "visible_speakers": [
+        "帘内人"
+      ],
+      "action": "帘内人把椅子向内收好，正常起身走两步到帘内侧；看同伴，没有看清整株海棠",
+      "dialogue_ids": [
+        "D3"
+      ],
+      "voiceover_ids": [],
+      "source_ids": [
+        "P1",
+        "P2"
+      ],
+      "caption_ids": [],
+      "duration_hint_s": 12
+    },
+    {
+      "id": "人-细问",
+      "kind": "people",
+      "moment": "M1",
+      "framing": "帘内人前侧中近景，以听者肩部保留交流关系",
+      "camera": "说话时留在她脸与手势；下一句落点推近少许，不推成脸部极特写",
+      "visible_speakers": [
+        "帘内人"
+      ],
+      "action": "帘内人看同伴，轻扬眉询问，再用自然手势指向庭院；语气认真但平和",
+      "dialogue_ids": [
+        "D4",
+        "D5"
+      ],
+      "voiceover_ids": [],
+      "source_ids": [
+        "P5",
+        "P6"
+      ],
+      "caption_ids": [],
+      "duration_hint_s": 13
+    },
+    {
+      "id": "场-解释",
+      "kind": "people",
+      "moment": "M1",
+      "framing": "同场双人中景，帘内侧与海棠背景同框",
+      "camera": "对白空隙跟随两人自然调整站位，保留交流关系，不游览静物",
+      "visible_speakers": [],
+      "action": "卷帘人把帘绳放稳，两人自然转向彼此；不新增核验结论",
+      "dialogue_ids": [],
+      "voiceover_ids": [
+        "N1",
+        "N2"
+      ],
+      "source_ids": [
+        "P3",
+        "P4",
+        "P5",
+        "P6"
+      ],
+      "caption_ids": [],
+      "duration_hint_s": 13
+    },
+    {
+      "id": "场-诗意",
+      "kind": "people",
+      "moment": "M1",
+      "framing": "同一庭室的双人中景；不换天气或时刻",
+      "camera": "可在前述对白间隙分用的同场覆盖，不是新增剧情阶段；字幕需要时间时继续拍正常人物行动",
+      "visible_speakers": [],
+      "action": "两人按日常目的整理帘边物件并交谈后的自然停留，动作实时，眼神面向对方或任务",
+      "dialogue_ids": [],
+      "voiceover_ids": [],
+      "source_ids": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5",
+        "P6"
+      ],
+      "caption_ids": [
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "T6"
+      ],
+      "duration_hint_s": 18
+    }
+  ],
+  "editing_note": "镜号是同一当前场景的覆盖与推荐交流顺序，不按原诗历史时间拆场。诗句提示按语义插入对白空隙，一次一条，可分散使用场-诗意覆盖；不要结尾堆字幕或按诗句重新排成事件线。时长仅作预演，锁剪辑后再生成真实字幕时间码。",
+  "manual_review_required": true
+}

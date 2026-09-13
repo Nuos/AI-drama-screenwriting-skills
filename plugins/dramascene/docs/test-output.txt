@@ -1,0 +1,46 @@
+test_bad_action (test_validate_scene.SceneTests.test_bad_action) ... ok
+test_bad_characters (test_validate_scene.SceneTests.test_bad_characters) ... ok
+test_bad_json_cli (test_validate_scene.SceneTests.test_bad_json_cli) ... ok
+test_bad_structure (test_validate_scene.SceneTests.test_bad_structure) ... ok
+test_baseline (test_validate_scene.SceneTests.test_baseline) ... ok
+test_camera_slow_is_not_actor_slow (test_validate_scene.SceneTests.test_camera_slow_is_not_actor_slow) ... ok
+test_caption_changed (test_validate_scene.SceneTests.test_caption_changed) ... ok
+test_caption_collision (test_validate_scene.SceneTests.test_caption_collision) ... ok
+test_classical_dialogue (test_validate_scene.SceneTests.test_classical_dialogue) ... ok
+test_classical_voiceover (test_validate_scene.SceneTests.test_classical_voiceover) ... ok
+test_depressed_affect (test_validate_scene.SceneTests.test_depressed_affect) ... ok
+test_dialogue_over_object (test_validate_scene.SceneTests.test_dialogue_over_object) ... ok
+test_duplicate_id (test_validate_scene.SceneTests.test_duplicate_id) ... ok
+test_empty_source_references (test_validate_scene.SceneTests.test_empty_source_references) ... ok
+test_ground_gaze (test_validate_scene.SceneTests.test_ground_gaze) ... ok
+test_inference_semantics (test_validate_scene.SceneTests.test_inference_semantics) ... ok
+test_inherited_structure (test_validate_scene.SceneTests.test_inherited_structure) ... ok
+test_invalid_duration (test_validate_scene.SceneTests.test_invalid_duration) ... ok
+test_invalid_reaction_target (test_validate_scene.SceneTests.test_invalid_reaction_target) ... ok
+test_invalid_source_kind (test_validate_scene.SceneTests.test_invalid_source_kind) ... ok
+test_long_insert_warns (test_validate_scene.SceneTests.test_long_insert_warns) ... ok
+test_malformed_rows (test_validate_scene.SceneTests.test_malformed_rows) ... ok
+test_manifests_and_skill (test_validate_scene.SceneTests.test_manifests_and_skill) ... ok
+test_missing_intent (test_validate_scene.SceneTests.test_missing_intent) ... ok
+test_missing_manual_review (test_validate_scene.SceneTests.test_missing_manual_review) ... ok
+test_missing_shots (test_validate_scene.SceneTests.test_missing_shots) ... ok
+test_multiple_moments (test_validate_scene.SceneTests.test_multiple_moments) ... ok
+test_non_object (test_validate_scene.SceneTests.test_non_object) ... ok
+test_original_spoken (test_validate_scene.SceneTests.test_original_spoken) ... ok
+test_past_reenactment (test_validate_scene.SceneTests.test_past_reenactment) ... ok
+test_plain_scene_does_not_require_poem_captions (test_validate_scene.SceneTests.test_plain_scene_does_not_require_poem_captions) ... ok
+test_poem_caption_not_speech (test_validate_scene.SceneTests.test_poem_caption_not_speech) ... ok
+test_reaction_cannot_open_dialogue (test_validate_scene.SceneTests.test_reaction_cannot_open_dialogue) ... ok
+test_reaction_insert_allowed_with_return (test_validate_scene.SceneTests.test_reaction_insert_allowed_with_return) ... ok
+test_readable_case_contains_all_spoken_lines (test_validate_scene.SceneTests.test_readable_case_contains_all_spoken_lines) ... ok
+test_slow_pace (test_validate_scene.SceneTests.test_slow_pace) ... ok
+test_speaker_hidden (test_validate_scene.SceneTests.test_speaker_hidden) ... ok
+test_unknown_source (test_validate_scene.SceneTests.test_unknown_source) ... ok
+test_unknown_speaker (test_validate_scene.SceneTests.test_unknown_speaker) ... ok
+test_voice_collision (test_validate_scene.SceneTests.test_voice_collision) ... ok
+test_wine_semantics (test_validate_scene.SceneTests.test_wine_semantics) ... ok
+
+----------------------------------------------------------------------
+Ran 41 tests in 0.582s
+
+OK

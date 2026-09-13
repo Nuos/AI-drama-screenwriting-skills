@@ -16,6 +16,18 @@
         "authentication": "ON_INSTALL"
       },
       "category": "Productivity"
+    },
+    {
+      "name": "dramascene",
+      "description": "剧情场景镜头优化：现代白话、随人调度、自然表演、旁白和原诗字幕。",
+      "source": {
+        "source": "local",
+        "path": "./plugins/dramascene"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Productivity"
     }
   ]
 }

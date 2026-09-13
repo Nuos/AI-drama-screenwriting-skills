@@ -1,0 +1,16 @@
+{
+  "name": "dramascene",
+  "description": "剧情场景镜头优化：现代白话对白、人物优先调度、自然表演、旁白与诗句字幕分工，以及全词同场表达。",
+  "version": "1.0.0",
+  "author": {
+    "name": "Nuos"
+  },
+  "homepage": "https://github.com/Nuos/AI-drama-screenwriting-skills/tree/main/plugins/dramascene",
+  "keywords": [
+    "screenwriting",
+    "dialogue",
+    "camera-blocking",
+    "poetry-adaptation"
+  ],
+  "skills": "./skills"
+}
